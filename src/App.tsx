@@ -108,7 +108,8 @@ export default function App() {
       Español: "es",
       "Tiếng Việt": "vi",
       Tagalog: "tl",
-      "中文": "zh"
+      "中文": "zh",
+      "हिन्दी": "hi"
     };
     const code = langMap[selectedLanguage] || "en";
     document.documentElement.lang = code;

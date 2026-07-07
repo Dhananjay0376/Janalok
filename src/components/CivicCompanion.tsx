@@ -16,6 +16,7 @@ const SUPPORTED_LANGUAGES = [
   { code: "Tiếng Việt", label: "Tiếng Việt" },
   { code: "Tagalog", label: "Tagalog" },
   { code: "中文", label: "中文" },
+  { code: "हिन्दी", label: "हिन्दी" },
 ];
 
 const PRESETS = [

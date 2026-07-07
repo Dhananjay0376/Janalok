@@ -117,7 +117,7 @@ export default function InfoModals({ isOpen, onClose, type }: InfoModalProps) {
                 <div className="p-4 border border-natural-border rounded-2xl bg-natural-bone/10 space-y-2">
                   <h4 className="font-bold text-natural-charcoal">1. Language Equity</h4>
                   <p className="text-xs text-natural-forest">
-                    All civic tools support translation, synthesis, and response generation in five primary languages (English, Español, Vietnamese, Tagalog, Chinese) to accommodate diverse immigrant and non-native speaker populations.
+                    All civic tools support translation, synthesis, and response generation in six primary languages (English, Español, Vietnamese, Tagalog, Chinese, Hindi) to accommodate diverse immigrant and non-native speaker populations.
                   </p>
                 </div>
 
