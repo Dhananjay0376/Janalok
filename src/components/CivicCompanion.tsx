@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Sparkles, Languages, HelpCircle, ShieldAlert, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
-import { ChatMessage, AppUser, PublicIssue } from "../types";
+import { ChatMessage } from "../types";
 import { motion } from "motion/react";
 
 interface CivicCompanionProps {
   onRecommendService: (query: string) => void;
   selectedLanguage: string;
   setSelectedLanguage: (lang: string) => void;
-  user: AppUser | null;
+  user: any;
 }
 
 const SUPPORTED_LANGUAGES = [
@@ -133,7 +133,7 @@ export default function CivicCompanion({ onRecommendService, selectedLanguage, s
   const [quickInquiriesCollapsed, setQuickInquiriesCollapsed] = useState(false);
   
   // Personalized state banks
-  const [userIssues, setUserIssues] = useState<PublicIssue[]>([]);
+  const [userIssues, setUserIssues] = useState<any[]>([]);
   const [pastTopics, setPastTopics] = useState<string[]>([]);
   const [showMobileMemory, setShowMobileMemory] = useState(false);
   const [userLocation, setUserLocation] = useState<{ latitude: number, longitude: number } | null>(null);
@@ -182,7 +182,7 @@ export default function CivicCompanion({ onRecommendService, selectedLanguage, s
       const allIssues = allIssuesRaw ? JSON.parse(allIssuesRaw) : [];
       const userIssueIds = userIssueIdsRaw ? JSON.parse(userIssueIdsRaw) : [];
       
-      let personalIssues = allIssues.filter((i: PublicIssue) => userIssueIds.includes(i.id));
+      let personalIssues = allIssues.filter((i: any) => userIssueIds.includes(i.id));
       
       // Seed a default issue for Dhananjay/Citizen to demonstrate instant memory out-of-the-box
       if (personalIssues.length === 0) {
@@ -207,7 +207,7 @@ export default function CivicCompanion({ onRecommendService, selectedLanguage, s
         
         // Add to global cache
         const currentAll = [...allIssues];
-        if (!currentAll.some((x: PublicIssue) => x.id === "PW-1029")) {
+        if (!currentAll.some((x: any) => x.id === "PW-1029")) {
           currentAll.push(defaultUserIssue);
           localStorage.setItem("janalok_all_issues", JSON.stringify(currentAll));
         }
@@ -347,7 +347,7 @@ export default function CivicCompanion({ onRecommendService, selectedLanguage, s
               <div className="flex justify-between items-start mb-0.5">
                 <span className="font-bold text-natural-charcoal truncate pr-2">{issue.title}</span>
                 <span className={`px-1 py-0.2 rounded text-[8px] font-bold ${
-                  issue.status === "Scheduled" || issue.status === "Under Review"
+                  issue.status === "Scheduled" || issue.status === "In Progress"
                     ? "bg-amber-50 text-amber-700 border border-amber-100"
                     : issue.status === "Resolved"
                     ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
