@@ -3,6 +3,7 @@ import { Sparkles, FileText, Building2, AlertTriangle, BarChart3, User, Info, Sh
 import CivicCompanion from "./components/CivicCompanion";
 import { auth, onAuthStateChanged } from "./firebase";
 import AuthModal from "./components/AuthModal";
+import InfoModals from "./components/InfoModals";
 
 const SimplifyDocument = lazy(() => import("./components/SimplifyDocument"));
 const ServiceFinder = lazy(() => import("./components/ServiceFinder"));
@@ -53,6 +54,8 @@ export default function App() {
     };
   });
   const [authOpen, setAuthOpen] = useState(false);
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [infoModalType, setInfoModalType] = useState<"privacy" | "charter" | "accessibility">("privacy");
 
   // Subscribe to Firebase Authentication state updates
   React.useEffect(() => {
@@ -299,9 +302,33 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-natural-forest/80 font-medium">
           <p>© 2026 Janālok platform. Transparency ID: 88-294021 • Built with Public Safety Protocols</p>
           <div className="flex space-x-4">
-            <a href="#" className="hover:text-natural-charcoal">Privacy Policy</a>
-            <a href="#" className="hover:text-natural-charcoal">Digital Inclusion Charter</a>
-            <a href="#" className="hover:text-natural-charcoal">Accessibility Score: 98%</a>
+            <button
+              onClick={() => {
+                setInfoModalType("privacy");
+                setInfoModalOpen(true);
+              }}
+              className="hover:text-natural-charcoal bg-transparent border-none p-0 cursor-pointer text-xs text-natural-forest/80 font-medium font-sans hover:underline focus:outline-none"
+            >
+              Privacy Policy
+            </button>
+            <button
+              onClick={() => {
+                setInfoModalType("charter");
+                setInfoModalOpen(true);
+              }}
+              className="hover:text-natural-charcoal bg-transparent border-none p-0 cursor-pointer text-xs text-natural-forest/80 font-medium font-sans hover:underline focus:outline-none"
+            >
+              Digital Inclusion Charter
+            </button>
+            <button
+              onClick={() => {
+                setInfoModalType("accessibility");
+                setInfoModalOpen(true);
+              }}
+              className="hover:text-natural-charcoal bg-transparent border-none p-0 cursor-pointer text-xs text-natural-forest/80 font-medium font-sans hover:underline focus:outline-none"
+            >
+              Accessibility Score: 98%
+            </button>
           </div>
         </div>
       </footer>
@@ -311,6 +338,13 @@ export default function App() {
         isOpen={authOpen}
         onClose={() => setAuthOpen(false)}
         onSignInMock={handleSignInMock}
+      />
+
+      {/* Info Modals (Privacy, Charter, Accessibility Score) */}
+      <InfoModals
+        isOpen={infoModalOpen}
+        onClose={() => setInfoModalOpen(false)}
+        type={infoModalType}
       />
     </div>
   );

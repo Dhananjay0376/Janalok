@@ -138,7 +138,7 @@ export default function CivicCompanion({ onRecommendService, selectedLanguage, s
   const [showMobileMemory, setShowMobileMemory] = useState(false);
   const [userLocation, setUserLocation] = useState<{ latitude: number, longitude: number } | null>(null);
   
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Welcome message with personalization
   useEffect(() => {
@@ -153,7 +153,12 @@ export default function CivicCompanion({ onRecommendService, selectedLanguage, s
   }, [user, activeName]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+    }
   }, [messages, loading]);
 
   // Handle auto-detect location
@@ -442,7 +447,7 @@ export default function CivicCompanion({ onRecommendService, selectedLanguage, s
         </div>
 
         {/* Messages Window */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4" role="log" aria-live="polite">
+        <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-6 space-y-4" role="log" aria-live="polite">
           {messages.map((msg) => {
             const isUser = msg.role === "user";
             return (
@@ -563,56 +568,53 @@ export default function CivicCompanion({ onRecommendService, selectedLanguage, s
               </div>
             </div>
           )}
-          <div ref={messagesEndRef} />
         </div>
 
-        {/* Recommended quick templates panel when chat is fresh */}
-        {messages.length === 1 && (
-          <div className="px-6 py-4 border-t border-natural-border bg-natural-bone/50">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-bold text-natural-forest flex items-center">
-                <HelpCircle className="w-3.5 h-3.5 mr-1.5 text-natural-forest" />
-                Quick Inquiries:
-              </p>
-              <button
-                type="button"
-                onClick={() => setQuickInquiriesCollapsed(!quickInquiriesCollapsed)}
-                className="text-[10px] font-bold text-natural-clay hover:text-natural-forest flex items-center space-x-1 cursor-pointer"
-              >
-                <span>{quickInquiriesCollapsed ? "Expand" : "Collapse"}</span>
-                {quickInquiriesCollapsed ? (
-                  <ChevronDown className="w-3.5 h-3.5" />
-                ) : (
-                  <ChevronUp className="w-3.5 h-3.5" />
-                )}
-              </button>
-            </div>
-
-            {!quickInquiriesCollapsed && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="grid grid-cols-1 sm:grid-cols-2 gap-2"
-              >
-                {PRESETS.map((preset, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => handleSend(preset.prompt)}
-                    className="flex items-start text-left p-3 bg-white border border-natural-border rounded-2xl hover:border-natural-clay hover:shadow-2xs transition-all duration-250 cursor-pointer"
-                  >
-                    <preset.icon className="w-4 h-4 text-natural-forest mt-0.5 mr-2 flex-shrink-0" />
-                    <div>
-                      <h4 className="text-xs font-bold text-natural-charcoal">{preset.title}</h4>
-                      <p className="text-[10px] text-natural-forest line-clamp-1">{preset.prompt}</p>
-                    </div>
-                  </button>
-                ))}
-              </motion.div>
-            )}
+        {/* Recommended quick templates panel */}
+        <div className="px-6 py-4 border-t border-natural-border bg-natural-bone/50">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-bold text-natural-forest flex items-center">
+              <HelpCircle className="w-3.5 h-3.5 mr-1.5 text-natural-forest" />
+              Quick Inquiries:
+            </p>
+            <button
+              type="button"
+              onClick={() => setQuickInquiriesCollapsed(!quickInquiriesCollapsed)}
+              className="text-[10px] font-bold text-natural-clay hover:text-natural-forest flex items-center space-x-1 cursor-pointer"
+            >
+              <span>{quickInquiriesCollapsed ? "Expand" : "Collapse"}</span>
+              {quickInquiriesCollapsed ? (
+                <ChevronDown className="w-3.5 h-3.5" />
+              ) : (
+                <ChevronUp className="w-3.5 h-3.5" />
+              )}
+            </button>
           </div>
-        )}
+
+          {!quickInquiriesCollapsed && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-2"
+            >
+              {PRESETS.map((preset, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => handleSend(preset.prompt)}
+                  className="flex items-start text-left p-3 bg-white border border-natural-border rounded-2xl hover:border-natural-clay hover:shadow-2xs transition-all duration-250 cursor-pointer"
+                >
+                  <preset.icon className="w-4 h-4 text-natural-forest mt-0.5 mr-2 flex-shrink-0" />
+                  <div>
+                    <h4 className="text-xs font-bold text-natural-charcoal">{preset.title}</h4>
+                    <p className="text-[10px] text-natural-forest line-clamp-1">{preset.prompt}</p>
+                  </div>
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </div>
 
         {/* Input panel */}
         <form
