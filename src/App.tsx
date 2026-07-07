@@ -56,6 +56,7 @@ export default function App() {
   const [authOpen, setAuthOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [infoModalType, setInfoModalType] = useState<"privacy" | "charter" | "accessibility">("privacy");
+  const [isChatExpanded, setIsChatExpanded] = useState(false);
 
   // Subscribe to Firebase Authentication state updates
   React.useEffect(() => {
@@ -190,75 +191,77 @@ export default function App() {
         <div className="flex flex-col lg:flex-row gap-6">
           
           {/* Left panel tabs navigation */}
-          <div className="w-full lg:w-64 flex-shrink-0">
-            <div className="bg-white p-5 rounded-[32px] border border-natural-border shadow-xs space-y-5">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-natural-forest px-2">
-                Services Hub
-              </p>
-
-              <nav className="space-y-1.5">
-                {tabsList.map((tab) => {
-                  const isActive = activeTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => {
-                        setActiveTab(tab.id);
-                        if (tab.id !== "services") setServiceQuery(""); // reset bridge query
-                      }}
-                      className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-2xl text-left text-xs md:text-sm font-semibold transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-natural-forest focus-visible:ring-offset-2 ${
-                        isActive
-                          ? "bg-natural-forest text-natural-cream shadow-xs"
-                          : "text-natural-charcoal/80 hover:bg-natural-bone hover:text-natural-charcoal"
-                      }`}
-                    >
-                      <div className={`p-1.5 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                        isActive ? "bg-[#4A5741] text-natural-cream" : tab.color
-                      }`}>
-                        <tab.icon className="w-4 h-4" />
-                      </div>
-                      <span className="flex-1 line-clamp-1">{tab.label}</span>
-                    </button>
-                  );
-                })}
-              </nav>
-
-              <div className="h-px bg-natural-border my-4" />
-
-              {/* Informational Widget */}
-              <div className="bg-natural-cream/35 p-5 rounded-2xl border border-natural-border space-y-2">
-                <div className="flex items-center space-x-2 text-natural-forest">
-                  <Info className="w-4 h-4 text-natural-forest flex-shrink-0" />
-                  <span className="text-[10px] font-bold uppercase tracking-wider">Help & Accessibility</span>
-                </div>
-                <p className="text-[11px] text-natural-charcoal/85 leading-relaxed font-medium">
-                  Janālok bridges the gap between citizens and municipal policies. All operations, file requirements, and timelines are cross-verified automatically.
+          {(!isChatExpanded || activeTab !== "companion") && (
+            <div className="w-full lg:w-64 flex-shrink-0">
+              <div className="bg-white p-5 rounded-[32px] border border-natural-border shadow-xs space-y-5">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-natural-forest px-2">
+                  Services Hub
                 </p>
-              </div>
 
-              <div className="h-px bg-natural-border my-4" />
+                <nav className="space-y-1.5">
+                  {tabsList.map((tab) => {
+                    const isActive = activeTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => {
+                          setActiveTab(tab.id);
+                          if (tab.id !== "services") setServiceQuery(""); // reset bridge query
+                        }}
+                        className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-2xl text-left text-xs md:text-sm font-semibold transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-natural-forest focus-visible:ring-offset-2 ${
+                          isActive
+                            ? "bg-natural-forest text-natural-cream shadow-xs"
+                            : "text-natural-charcoal/80 hover:bg-natural-bone hover:text-natural-charcoal"
+                        }`}
+                      >
+                        <div className={`p-1.5 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                          isActive ? "bg-[#4A5741] text-natural-cream" : tab.color
+                        }`}>
+                          <tab.icon className="w-4 h-4" />
+                        </div>
+                        <span className="flex-1 line-clamp-1">{tab.label}</span>
+                      </button>
+                    );
+                  })}
+                </nav>
 
-              {/* Platform Creator & Owner Section */}
-              <div className="bg-gradient-to-br from-white to-natural-bone/45 p-5 rounded-2xl border border-natural-border space-y-3 shadow-3xs">
-                <div className="flex items-center space-x-2 text-natural-forest">
-                  <User className="w-4 h-4 text-natural-clay flex-shrink-0" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-natural-forest">Platform Architect</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-xl bg-natural-forest text-natural-cream flex items-center justify-center font-bold text-sm shadow-2xs font-serif italic">
-                    DN
+                <div className="h-px bg-natural-border my-4" />
+
+                {/* Informational Widget */}
+                <div className="bg-natural-cream/35 p-5 rounded-2xl border border-natural-border space-y-2">
+                  <div className="flex items-center space-x-2 text-natural-forest">
+                    <Info className="w-4 h-4 text-natural-forest flex-shrink-0" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider">Help & Accessibility</span>
                   </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-natural-charcoal">Dhananjay Narula</h4>
-                    <p className="text-[9px] text-natural-forest font-bold">Chief Civic Engineer & Founder</p>
-                  </div>
+                  <p className="text-[11px] text-natural-charcoal/85 leading-relaxed font-medium">
+                    Janālok bridges the gap between citizens and municipal policies. All operations, file requirements, and timelines are cross-verified automatically.
+                  </p>
                 </div>
-                <p className="text-[10px] text-natural-charcoal/80 leading-relaxed font-medium">
-                  Established by Dhananjay Narula to facilitate absolute transparency, community-sourced local accountability, and streamlined civic administration.
-                </p>
+
+                <div className="h-px bg-natural-border my-4" />
+
+                {/* Platform Creator & Owner Section */}
+                <div className="bg-gradient-to-br from-white to-natural-bone/45 p-5 rounded-2xl border border-natural-border space-y-3 shadow-3xs">
+                  <div className="flex items-center space-x-2 text-natural-forest">
+                    <User className="w-4 h-4 text-natural-clay flex-shrink-0" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-natural-forest">Platform Architect</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-xl bg-natural-forest text-natural-cream flex items-center justify-center font-bold text-sm shadow-2xs font-serif italic">
+                      DN
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-natural-charcoal">Dhananjay Narula</h4>
+                      <p className="text-[9px] text-natural-forest font-bold">Chief Civic Engineer & Founder</p>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-natural-charcoal/80 leading-relaxed font-medium">
+                    Established by Dhananjay Narula to facilitate absolute transparency, community-sourced local accountability, and streamlined civic administration.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Right Panel Viewports */}
           <div className="flex-1">
@@ -270,6 +273,8 @@ export default function App() {
                     onRecommendService={handleRecommendServiceBridge}
                     selectedLanguage={selectedLanguage}
                     setSelectedLanguage={setSelectedLanguage}
+                    isExpanded={isChatExpanded}
+                    onToggleExpand={() => setIsChatExpanded(!isChatExpanded)}
                   />
                 )}
 

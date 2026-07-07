@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Sparkles, Languages, HelpCircle, ShieldAlert, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
+import { Sparkles, Languages, HelpCircle, ShieldAlert, CheckCircle2, ChevronDown, ChevronUp, Maximize2, Minimize2 } from "lucide-react";
 import { ChatMessage } from "../types";
 import { motion } from "motion/react";
 
@@ -8,6 +8,8 @@ interface CivicCompanionProps {
   selectedLanguage: string;
   setSelectedLanguage: (lang: string) => void;
   user: any;
+  isExpanded: boolean;
+  onToggleExpand: () => void;
 }
 
 const SUPPORTED_LANGUAGES = [
@@ -118,7 +120,7 @@ function parseBoldText(text: string): React.ReactNode[] {
  * @param props.setSelectedLanguage callback to change selected language
  * @param props.user authenticated citizen or null
  */
-export default function CivicCompanion({ onRecommendService, selectedLanguage, setSelectedLanguage, user }: CivicCompanionProps) {
+export default function CivicCompanion({ onRecommendService, selectedLanguage, setSelectedLanguage, user, isExpanded, onToggleExpand }: CivicCompanionProps) {
   const activeName = user ? (user.displayName || user.email?.split("@")[0] || "Citizen") : "Guest Citizen";
   const initials = activeName
     .split(" ")
@@ -398,10 +400,12 @@ export default function CivicCompanion({ onRecommendService, selectedLanguage, s
   return (
     <div className="flex flex-col md:flex-row h-[calc(100vh-220px)] min-h-[450px] bg-white rounded-[32px] border border-natural-border shadow-xs overflow-hidden" id="civic-companion-component">
       {/* Sidebar: Citizen Profile & Memory Vault (Desktop Only) */}
-      <div className="w-80 border-r border-natural-border bg-natural-bone/35 p-5 hidden md:flex flex-col space-y-4 flex-shrink-0 overflow-y-auto">
-        <h2 className="text-xs font-serif font-bold text-natural-charcoal uppercase tracking-wider mb-1">Citizen Memory Vault</h2>
-        {renderMemoryContent()}
-      </div>
+      {!isExpanded && (
+        <div className="w-80 border-r border-natural-border bg-natural-bone/35 p-5 hidden md:flex flex-col space-y-4 flex-shrink-0 overflow-y-auto">
+          <h2 className="text-xs font-serif font-bold text-natural-charcoal uppercase tracking-wider mb-1">Citizen Memory Vault</h2>
+          {renderMemoryContent()}
+        </div>
+      )}
 
       {/* Chat container */}
       <div className="flex-1 flex flex-col h-full overflow-hidden">
@@ -418,6 +422,21 @@ export default function CivicCompanion({ onRecommendService, selectedLanguage, s
           </div>
 
           <div className="flex items-center space-x-2">
+            {/* Expand / Collapse Screen Toggle (Desktop Only) */}
+            <button
+              type="button"
+              onClick={onToggleExpand}
+              title={isExpanded ? "Collapse View" : "Expand View"}
+              aria-label={isExpanded ? "Collapse View" : "Expand View"}
+              className="hidden md:flex items-center justify-center p-2 bg-white border border-natural-border rounded-xl shadow-2xs hover:bg-natural-bone text-natural-forest transition-colors cursor-pointer"
+            >
+              {isExpanded ? (
+                <Minimize2 className="w-4 h-4" />
+              ) : (
+                <Maximize2 className="w-4 h-4" />
+              )}
+            </button>
+
             {/* Mobile Memory Vault Toggle */}
             <button
               type="button"
