@@ -1,0 +1,6 @@
+{
+  "name": "Janālok AI Platform",
+  "description": "An intelligent citizen services portal featuring an AI Civic Companion, legal document simplifier, localized service directories, and a transparent public issue tracker with visual metrics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
