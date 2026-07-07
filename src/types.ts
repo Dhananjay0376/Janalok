@@ -44,3 +44,10 @@ export interface SimplifiedDoc {
   nextSteps: string[];
   glossary: { term: string; definition: string }[];
 }
+
+export interface AppUser {
+  displayName: string | null;
+  email: string | null;
+  uid: string;
+  isMock?: boolean;
+}

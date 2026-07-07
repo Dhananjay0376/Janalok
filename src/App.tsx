@@ -3,6 +3,7 @@ import { Sparkles, FileText, Building2, AlertTriangle, BarChart3, User, Info, Sh
 import CivicCompanion from "./components/CivicCompanion";
 import { auth, onAuthStateChanged } from "./firebase";
 import AuthModal from "./components/AuthModal";
+import { AppUser } from "./types";
 
 const SimplifyDocument = lazy(() => import("./components/SimplifyDocument"));
 const ServiceFinder = lazy(() => import("./components/ServiceFinder"));
@@ -40,7 +41,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<TabId>("companion");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("English");
   const [serviceQuery, setServiceQuery] = useState<string>("");
-  const [user, setUser] = useState<any>(() => {
+  const [user, setUser] = useState<AppUser | null>(() => {
     const explicitlyLoggedOut = localStorage.getItem("explicitly_logged_out") === "true";
     if (explicitlyLoggedOut) {
       return null;
