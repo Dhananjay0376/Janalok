@@ -617,7 +617,7 @@ app.post("/api/chat", async (req, res) => {
 
     try {
       const response = await generateContentWithRetry(ai, {
-        model: "gemini-3.5-flash",
+        model: "gemini-2.5-flash",
         contents: formattedContents,
         config: config,
       });
@@ -670,7 +670,7 @@ app.post("/api/translate-static", async (req, res) => {
       // Fallback: Translate using Gemini
       const ai = getAI();
       const geminiResponse = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.5-flash",
         contents: `Translate the following text to language code "${targetLanguage}": \n\n"${text}"`,
         config: {
           systemInstruction: "You are a professional translator. Translate the text precisely and return ONLY the translated string, nothing else. Preserve formatting and placeholders."
@@ -753,7 +753,7 @@ app.post("/api/vision-ocr", async (req, res) => {
     Return the response in a structured JSON format matching the schema.`;
 
     const geminiResponse = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: [
         {
           inlineData: {
@@ -831,7 +831,7 @@ app.post("/api/simplify", async (req, res) => {
 
     try {
       const response = await generateContentWithRetry(ai, {
-        model: "gemini-3.5-flash",
+        model: "gemini-2.5-flash",
         contents: `Please simplify the following official, legal, or complex civic document/jargon into simple terms: \n\n"${sanitizedText}"`,
         config: {
           systemInstruction: `You are Janālok's civic legal expert who translates dense, confusing government documents, guidelines, legal text, or municipal regulations into crystal-clear plain language. 
@@ -924,7 +924,7 @@ app.post("/api/recommend", async (req, res) => {
 
     try {
       const response = await generateContentWithRetry(ai, {
-        model: "gemini-3.5-flash",
+        model: "gemini-2.5-flash",
         contents: `Recommend civic services for this citizen situation: \n\n"${sanitizedQuery}"`,
         config: {
           systemInstruction: `You are Janālok's expert municipal service directory search tool. Analyze the citizen's situation/need (e.g. moving to a new house, filing taxes, reporting potholes, requesting housing support, voter ID renewal, starting a local business) and recommend relevant official services. 
