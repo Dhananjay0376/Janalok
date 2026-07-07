@@ -12,7 +12,6 @@ vi.mock("@google/genai", () => {
       throw error;
     }
 
-    // Mock responses based on the request content or model config
     const sysInstruction = params?.config?.systemInstruction || "";
 
     if (sysInstruction.includes("expert municipal service directory")) {
@@ -42,6 +41,17 @@ vi.mock("@google/genai", () => {
           keyTakeaways: ["Takeaway A", "Takeaway B"],
           nextSteps: ["Step 1", "Step 2"],
           glossary: [{ term: "Jargon", definition: "Plain terms" }]
+        })
+      };
+    }
+
+    if (params?.config?.responseMimeType === "application/json") {
+      return {
+        text: JSON.stringify({
+          summary: "Mocked OCR summary",
+          name: "John Citizen",
+          location: "123 Main St",
+          documentId: "DOC-123"
         })
       };
     }
@@ -340,6 +350,30 @@ describe("Janālok API Server Integration Tests", () => {
       expect(rateLimitedRes.status).toBe(429);
       expect(rateLimitedRes.body.error).toBe("Too Many Requests");
       expect(rateLimitedRes.body.message).toContain("safety rate limit");
+    });
+  });
+
+  describe("POST /api/translate-static", () => {
+    it("should process translation requests successfully using Gemini fallback", async () => {
+      const res = await request(app)
+        .post("/api/translate-static")
+        .send({ text: "Hello", targetLanguage: "es" });
+
+      expect(res.status).toBe(200);
+      expect(res.body.translatedText).toBeDefined();
+    });
+  });
+
+  describe("POST /api/vision-ocr", () => {
+    it("should process image OCR requests successfully using Gemini fallback", async () => {
+      const res = await request(app)
+        .post("/api/vision-ocr")
+        .send({ image: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP" });
+
+      expect(res.status).toBe(200);
+      expect(res.body.rawText).toBeDefined();
+      expect(res.body.structured).toBeDefined();
+      expect(res.body.structured.summary).toBe("Mocked OCR summary");
     });
   });
 });
